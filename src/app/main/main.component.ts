@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import * as d3 from 'd3';
+import {PiInterpreter} from '../model/pi-interpreter';
 
 @Component({
   selector: 'app-main',
@@ -7,7 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
@@ -17,7 +20,16 @@ export class MainComponent implements OnInit {
       'SERVER = a!b.SERVER\n' +
       'CLIENT = a?p.p!d.CLIENT\n' +
       'new(a).new(b).(CLIENT|SERVER|PRINTER)';
-    // @ts-ignore
-    document.getElementById('code_input').value = input;
+    d3.select('#code_input').node().value = input;
+  }
+
+  run() {
+    const interpreter = new PiInterpreter();
+    interpreter.loadInput(d3.select('#code_input').node().value);
+
+    d3.select('#code_output').node().value = '';
+    d3.select('#code_debug').node().value = '';
+
+    interpreter.run();
   }
 }
